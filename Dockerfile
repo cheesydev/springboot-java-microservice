@@ -24,7 +24,7 @@ RUN ./mvnw install
 #
 # dist
 #
-FROM openjdk:8-alpine AS dist
+FROM openjdk:8-jre-alpine AS dist
 
 RUN addgroup -S appuser && adduser -S -G appuser appuser
 USER appuser
