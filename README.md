@@ -2,7 +2,7 @@
 
 Java REST API microservice for tests and demos.
 
-# Build and run with Docker
+## Build and run with Docker
 
 First image build may take minutes.
 ```
