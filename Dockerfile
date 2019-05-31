@@ -10,9 +10,15 @@ WORKDIR /home/appbuilder
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
+
+# download all dependencies before hand, takes a few minutes!
+RUN ./mvnw dependency:go-offline
+
+# and then, copy project files to build
+# most likely subsequent builds will be triggered by changes in src
 COPY src src
 
-# run the tests and create the package file `target/springboot-app.jar`
+# build, run tests and create the package file `target/springboot-app.jar`
 RUN ./mvnw install
 
 #
