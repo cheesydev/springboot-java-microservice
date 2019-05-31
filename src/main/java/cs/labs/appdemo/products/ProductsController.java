@@ -1,11 +1,15 @@
 package cs.labs.appdemo.products;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -22,5 +26,18 @@ public class ProductsController {
     @GetMapping
     public List<Product> allProducts() {
         return ALL_PRODUCTS;
+    }
+
+    @GetMapping("/{id}")
+    public Product getProduct(@PathVariable("id") String id) {
+
+        Optional<Product> product = ALL_PRODUCTS.stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst();
+
+        if (product.isPresent())
+            return product.get();
+        else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
     }
 }
