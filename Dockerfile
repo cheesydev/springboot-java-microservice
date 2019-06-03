@@ -1,9 +1,9 @@
 #
 # builder
 #
-FROM openjdk:8-alpine AS builder
+FROM openjdk:11-jdk-slim AS builder
 
-RUN addgroup -S appbuilder && adduser -S -G appbuilder appbuilder
+RUN groupadd -g 1000 appbuilder && useradd -m -u 1000 -g appbuilder appbuilder
 USER appbuilder
 WORKDIR /home/appbuilder
 
@@ -17,9 +17,9 @@ RUN ./gradlew test bootJar
 #
 # dist
 #
-FROM openjdk:8-jre-alpine AS dist
+FROM openjdk:11-jdk-slim AS dist
 
-RUN addgroup -S appuser && adduser -S -G appuser appuser
+RUN groupadd -g 1000 appuser && useradd -m -u 1000 -g appuser appuser
 USER appuser
 WORKDIR /home/appuser
 
