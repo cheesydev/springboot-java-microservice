@@ -1,5 +1,6 @@
 package cs.labs.appdemo.products;
 
+import io.micrometer.core.annotation.Timed;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +14,6 @@ import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-
 @RestController
 @RequestMapping("/products")
 public class ProductsController {
@@ -24,11 +24,13 @@ public class ProductsController {
             new Product("12", "prod3", new BigDecimal("90.50")));
 
     @GetMapping
+    @Timed("products.all")
     public List<Product> allProducts() {
         return ALL_PRODUCTS;
     }
 
     @GetMapping("/{id}")
+    @Timed(value = "products.by-id")
     public Product getProduct(@PathVariable("id") String id) {
 
         Optional<Product> product = ALL_PRODUCTS.stream()
