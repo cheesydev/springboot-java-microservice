@@ -12,7 +12,7 @@ COPY gradlew .
 COPY build.gradle settings.gradle ./
 
 COPY src src
-RUN ./gradlew test bootJar
+RUN ./gradlew --no-daemon test bootJar
 
 #
 # dist
