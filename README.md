@@ -44,6 +44,10 @@ docker logs <CONTAINER_NAME>
 docker stop <CONTAINER_NAME>
 ```
 
+At this point, you can try the app APIs at `http://localhost:8080/products` or
+`http://localhost:8080/products/10`. Also you can generate a few `404`s trying
+to hit `http://localhost:8080/products/666`.
+
 There is a `prometheus.yml` config file that Prometheus should load in order to know where to scrap for metrics,
 in this case, how to find and query the application exposing a metrics endpoint.
 
@@ -67,6 +71,24 @@ the HTTP URL where the service is running. Having in mind containers in the same
 set `http://prometheus:9090` as data source URL, then save.
 
 Now you can create your first dashboard. Back to the home scree, You can select "New dashboard" button or go to the
-plus icon at the left. A new Panel is created in the fresh dashboard. You can "Add Query", type `process_cpu_usage`
-and a graph should be plotted above. You can "save dashboard" at the disk button at the top to go back to the
-dashboard. Additionally, you can add more metrics, or rename your dashboard in settings' cog icon.
+plus icon at the left. A new Panel is created in the fresh dashboard. You can "Add Query", type `process_cpu_usage`,
+un-select the field (click somewhere else) and a graph should be plotted above. You can "save dashboard" in the
+floppy disk button at the top to go back to the dashboard.
+
+### Generating traffic to try Prometheus queries
+
+With the service up and running, you can open a new terminal tab and keep run:
+```
+./generate_requests.sh
+```
+
+It will randomly hit the API with valid (200) and invalid (404) results. After a few minutes, try to see the results
+in Grafana creating a dashboard to count Status codes per minutes.
+
+Try to add a Panel, adding the 2 following metrics to the same Panel:
+* `rate(products_by_id_seconds_count{status="200"}[1m])` to see the rate of
+  200 per minute.
+* `rate(products_by_id_seconds_count{status!="200"}[1m])` to see the rate of
+  not-200 per minute.
+
+![alt text](grafana-ok-notok.png "Grafana with Prometheus queries")
