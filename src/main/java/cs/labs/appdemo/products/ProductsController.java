@@ -21,7 +21,8 @@ public class ProductsController {
     private static final List<Product> ALL_PRODUCTS = newArrayList(
             new Product("10", "prod1", new BigDecimal("10.50")),
             new Product("11", "prod2", new BigDecimal("23.00")),
-            new Product("12", "prod3", new BigDecimal("90.50")));
+            new Product("12", "prod3", new BigDecimal("90.50")),
+            new Product("13", "prod4", new BigDecimal("190.50")));
 
     @GetMapping
     @Timed("products.all")
