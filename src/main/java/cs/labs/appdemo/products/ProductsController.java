@@ -31,15 +31,15 @@ public class ProductsController {
 
     @GetMapping("/{id}")
     @Timed(value = "products.by-id")
-    public Product getProduct(@PathVariable("id") String id) {
+    public ProductWithReviews getProduct(@PathVariable("id") String id) {
 
         Optional<Product> product = ALL_PRODUCTS.stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
 
-        if (product.isPresent())
-            return product.get();
-        else
+        if (!product.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+
+        return new ProductWithReviews(product.get(), new Rating(4));
     }
 }

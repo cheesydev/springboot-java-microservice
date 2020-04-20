@@ -29,9 +29,9 @@ public class ProductsControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
 
-        Product returnedProduct = new ObjectMapper()
-                .readValue(response.getContentAsByteArray(), Product.class);
+        ProductWithReviews returnedProduct = new ObjectMapper()
+                .readValue(response.getContentAsByteArray(), ProductWithReviews.class);
 
-        assertThat(returnedProduct.getId()).isEqualTo("10");
+        assertThat(returnedProduct.getProduct().getId()).isEqualTo("10");
     }
 }
