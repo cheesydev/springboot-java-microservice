@@ -1,5 +1,6 @@
 package cs.labs.appdemo.products;
 
+import cs.labs.appdemo.rating.RatingService;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,9 @@ public class ProductsController {
         if (!product.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
 
-        return new ProductWithReviews(product.get(), new Rating(4));
+        RatingService ratingService = new RatingService("http://localhost:8081");
+        int rating = ratingService.ratingForProductId(product.get().getId());
+
+        return new ProductWithReviews(product.get(), new Rating(rating));
     }
 }
