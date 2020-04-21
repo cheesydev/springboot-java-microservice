@@ -23,4 +23,5 @@ dependencies {
 	compile 'io.micrometer:micrometer-registry-prometheus'
 	compile 'com.google.guava:guava:27.1-jre'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.eclipse.jetty.aggregate:jetty-all:9.4.28.v20200408'
 }
