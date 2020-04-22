@@ -42,7 +42,7 @@ public class ProductsController {
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
 
-        if (!product.isPresent())
+        if (product.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
 
         int rating = ratingService.ratingForProductId(product.get().getId());
