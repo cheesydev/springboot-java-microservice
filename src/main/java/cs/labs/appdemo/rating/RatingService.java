@@ -1,6 +1,8 @@
 package cs.labs.appdemo.rating;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,15 +12,22 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+@Service
 public class RatingService {
 
     private URI serviceUri;
 
-    public RatingService(String url) {
+    public RatingService(@Value("${rating.service.host}") String host,
+                         @Value("${rating.service.port}") Integer port) {
+        init(host, port);
+    }
+
+    private void init(String host, Integer port) {
+        String url = "http://" + host + ":" + port + "/rating";
         try {
-            this.serviceUri = new URI(url + "/rating");
+            serviceUri = new URI(url);
         } catch (URISyntaxException e) {
-            throw new RuntimeException("Invalid Rating Service URL. ", e);
+            throw new IllegalArgumentException("Invalid Rating Service URL: " + url, e);
         }
     }
 
@@ -35,7 +44,7 @@ public class RatingService {
             return Integer.parseInt(rating.getRating());
 
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to call " + serviceUri, e);
         }
     }
 }

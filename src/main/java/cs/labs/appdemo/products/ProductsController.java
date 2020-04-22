@@ -2,6 +2,7 @@ package cs.labs.appdemo.products;
 
 import cs.labs.appdemo.rating.RatingService;
 import io.micrometer.core.annotation.Timed;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,9 @@ public class ProductsController {
             new Product("11", "prod2", new BigDecimal("23.00")),
             new Product("12", "prod3", new BigDecimal("90.50")));
 
+    @Autowired
+    private RatingService ratingService;
+
     @GetMapping
     @Timed("products.all")
     public List<Product> allProducts() {
@@ -41,7 +45,6 @@ public class ProductsController {
         if (!product.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
 
-        RatingService ratingService = new RatingService("http://localhost:8081");
         int rating = ratingService.ratingForProductId(product.get().getId());
 
         return new ProductWithReviews(product.get(), new Rating(rating));
