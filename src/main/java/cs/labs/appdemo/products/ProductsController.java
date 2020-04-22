@@ -2,6 +2,8 @@ package cs.labs.appdemo.products;
 
 import cs.labs.appdemo.rating.RatingService;
 import io.micrometer.core.annotation.Timed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,8 @@ import static com.google.common.collect.Lists.newArrayList;
 @RestController
 @RequestMapping("/products")
 public class ProductsController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ProductsController.class);
 
     private static final List<Product> ALL_PRODUCTS = newArrayList(
             new Product("10", "prod1", new BigDecimal("10.50")),
@@ -45,7 +49,13 @@ public class ProductsController {
         if (product.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
 
-        int rating = ratingService.ratingForProductId(product.get().getId());
+        int rating;
+        try {
+            rating = ratingService.ratingForProductId(product.get().getId());
+        } catch (RuntimeException e) {
+            LOG.error("Failed to call RatingService: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
 
         return new ProductWithReviews(product.get(), new Rating(rating));
     }

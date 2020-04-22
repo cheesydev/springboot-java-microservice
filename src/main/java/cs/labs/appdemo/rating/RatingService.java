@@ -35,16 +35,24 @@ public class RatingService {
         HttpRequest request = HttpRequest.newBuilder(serviceUri)
                 .build();
 
+        InputStream body;
         try {
-            InputStream body = HttpClient.newHttpClient()
+            body = HttpClient.newHttpClient()
                     .send(request, HttpResponse.BodyHandlers.ofInputStream())
                     .body();
 
-            Rating rating = new ObjectMapper().readValue(body, Rating.class);
-            return Integer.parseInt(rating.getRating());
-
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Failed to call " + serviceUri, e);
+            throw new RuntimeException("Failed to call " + serviceUri + ": " + e.getMessage(), e);
         }
+
+        Rating rating;
+        try {
+            rating = new ObjectMapper().readValue(body, Rating.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed parse JSON response: " + e.getMessage(), e);
+        }
+
+        return Integer.parseInt(rating.getRating());
+
     }
 }
