@@ -17,6 +17,11 @@ bootJar {
 	archiveFileName = 'springboot-app.jar'
 }
 
+test {
+	// print logs while running gradle test
+	testLogging.showStandardStreams = true
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
