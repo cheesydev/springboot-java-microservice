@@ -21,6 +21,11 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
+        env:
+        - name: RATING_SERVICE_HOST
+          value: go-microservice
+        - name: RATING_SERVICE_PORT
+          value: 8080
 ---
 kind: Service
 apiVersion: v1
